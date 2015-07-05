@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <link rel="stylesheet" href="webuploader-0.15/webuploader.css">
+    <base href="http://localhost:8080/uploader/" target="_blank, _self, _parent, _top">
+</head>
+<style type="text/css" media="screen">
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.uploader-img {
+    display: inline-block;
+    margin:5px;
+}
+
+.uploader-img > div {
+    position: absolute;
+    width: 110px;
+    z-index: 300;
+}
+
+.uploader-img > div a {
+    width: 24px;
+    height: 24px;
+    display: inline;
+    float: right;
+    text-indent: -9999px;
+    overflow: hidden;
+    background: url(./images/delete.png) no-repeat;
+    margin: 5px 1px 1px;
+    cursor: pointer;
+}
+.uploader-img > div a.uploader-img-cancle {
+    background-position: -48px -24px;
+}
+.uploader-img > div a.uploader-img-cancle:hover {
+    background-position: -48px 0;
+}
+</style>
+
+<body>
+    <div id="uploader">
+        <div id="filePicker"></div>
+        <div id="uploader-imgList"></div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="webuploader-0.15/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="webuploader-0.15/webuploader.min.js"></script>
+<script type="text/javascript">
+
+WebUploader.Uploader.prototype.onFileQueued = function(file) {
+	if(file.type.match("image")!==null){	//图片
+
+	}else{	//文件
+		
+	}
+    var deleteImg = "images/delete.png"
+    $imgList = $("#uploader-imgList");
+    $fileList = $("#uploader-fileList");
+    this.makeThumb(file, function(error, src) {
+        var html = '<div id=\"'+file.id+'\" class=\"uploader-img\">' +
+            '<div><a href=\"javascript:cancleImg(\''+file.id+'\');\" class=\"uploader-img-cancle\"></a></div>' +
+            '<img  src=\"' + src + '\" >' +
+            '</div>';
+        $imgList.append(html);
+    });
+}
+
+var uploader = WebUploader.create({
+    pick: {
+        id: '#filePicker', //指定上传按钮
+        innerHTML: '<img class=\"\" src=\"images/Up.ico\" alt=\"图片上传\">图片上传', //按钮的内容
+        multiple: true //是否开起同时选择多个文件能力
+    },
+    // dnd: '#dndArea', //指定Drag And Drop拖拽的容器，如果不指定，则不启动
+    // paste: '#uploader', //指定监听paste事件的容器,通过粘贴来上传图片建议设置为document.body
+    thumb: {
+        width: 110,
+        height: 110,
+
+        // 图片质量，只有type为`image/jpeg`的时候才有效。
+        quality: 70,
+
+        // 是否允许放大，如果想要生成小图的时候不失真，此选项应该设置为false.
+        allowMagnify: true,
+
+        // 是否允许裁剪。
+        crop: true,
+
+        // 为空的话则保留原有图片格式。
+        // 否则强制转换成指定的类型。
+        type: 'image/jpeg'
+    }
+});
+function cancleImg(fileId){
+	uploader.removeFile(fileId,true);
+	$("#"+fileId).remove();
+}
+</script>
